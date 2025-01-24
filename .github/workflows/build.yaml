@@ -1,0 +1,29 @@
+name: Build and Push to GitHub Container Registry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Clone external repository
+        run: git clone https://github.com/ente-io/ente
+
+      - name: Build Docker image
+        run: |
+          echo "Starting the build process..."
+          mv Dockerfile ente/web
+          cd ente/web
+          docker build -t ghcr.io/${{ github.repository }}/ente-web:latest --no-cache --progress plain .
+
+      - name: Push Docker image to GitHub Container Registry
+        run: docker push ghcr.io/${{ github.repository  }}/ente-web:latest
