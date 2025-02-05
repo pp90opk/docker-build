@@ -41,7 +41,6 @@ EXPOSE ${CAST}
 
 # The albums app does not have navigable pages on it, but the
 # port will be exposed in-order to self up the albums endpoint
-# `apps.public-albums` in museum.yaml configuration file.
 ENV ALBUMS=3004
 EXPOSE ${ALBUMS}
 
